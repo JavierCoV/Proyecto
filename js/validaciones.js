@@ -1,5 +1,6 @@
 const btnEnviar = document.getElementById('btn-enviar');
 
+//Validador campos
 const validate = (validador) => {
     validador.preventDefault();
     const nombre_usuario = document.getElementById('nombre');
@@ -7,124 +8,70 @@ const validate = (validador) => {
     const correo_electronico = document.getElementById('email');
     const num_telefono = document.getElementById('telefono');
     const mensaje = document.getElementById('mensaje');
-    
 
-
-    if (nombre.value === "") {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'Ingresa tu nombre!',
-          })
-        nombre.focus();
-        return false;
-    }
-
-    if (apellido.value === "") {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'Ingresa tu apellido!',
-          })
-        apellido.focus();
-        return false;
-    }
-
-    if (email.value === "") {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'Ingresa tu correo!',
-          })
-        email.focus();
-        return false;
-    }
-
-    if (telefono.value === "") {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'Ingresa tu Telefono!',
-          })
-       
-        telefono.focus();
-        return false;
-    }
-
-    if (mensaje.value === "") {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'Ingresa un mensaje!',
-          })
-        mensaje.focus();
-        return false;
-    }
-
-    //validador nombre
+    //Validador nombre
     if (!nombre_valido(nombre.value)) {
         Swal.fire({
             icon: 'warning',
-            title: 'Oops...',
+            title: 'MENSAJE',
             text: 'Por favor, escribe un nombre válido',
           });
         nombre.focus();
         return false;
-    } // fin validador nombre
+    }//Fin validador nombre
 
-    //validador apellido
+    //Validador apellido
     if (!apellido_valido(apellido.value)) {
         Swal.fire({
             icon: 'warning',
-            title: 'Oops...',
+            title: 'MENSAJE',
             text: 'Por favor, escribe un apellido válido',
           });
         apellido.focus();
         return false;
-    } // fin validador apellido
-   
+    } //Fin validador apellido 
 
-    //validador correo electrónico
+    //Validador correo electrónico
     if (!correo_valido(email.value)) {
         Swal.fire({
             icon: 'warning',
-            title: 'Oops...',
+            title: 'MENSAJE',
             text: 'Por favor, escribe un correo electronico válido',
            });
         email.focus();
         return false;
-    } // fin validador correo electrónico
+    } //Fin validador correo electrónico
 
-     //validador teléfono
+     //Validador teléfono
      if (!telefono_valido(telefono.value)) {
         Swal.fire({
             icon: 'warning',
-            title: 'Oops...',
+            title: 'MENSAJE',
             text: 'Por favor, escribe un telefono válido',
           });
         telefono.focus();
         return false;
-    } // fin validador teléfono
+    } //Fin validador teléfono
 
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 1000,
         timerProgressBar: true,
         didOpen: (toast) => {
           toast.addEventListener('mouseenter', Swal.stopTimer)
           toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
-      })
-      
+      })      
       Toast.fire({
         icon: 'success',
         title: 'Datos enviados exitosamente'
       })
+    sendEmail(); 
     document.getElementById("contact-form").reset();
     return true;
-}
+}//Fin validador campos
 
 function localstorage(){
     let nombre= document.getElementById("nombre");
@@ -143,7 +90,15 @@ function localstorage(){
     localStorage.setItem("mensaje", mensaje.value);
 }
 
-//declaración constantes
+function sendEmail() {
+  let dirEmail = "mailto:soporte@redsocial.com"             
+           + "&subject=" + encodeURIComponent("Contacto usuario red social")
+           + "&body=" + encodeURIComponent(document.getElementById('mensaje').value)
+  ;    
+  window.location.href = dirEmail;
+}
+
+//Declaración constantes para regex
 const nombre_valido = nombre => {
     return /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u.test(nombre);
 }
@@ -153,12 +108,10 @@ const apellido_valido = apellido => {
 }
 
 const correo_valido = email => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 }
 
 const telefono_valido = telefono => {
     return /^\d{2}\d{8}$/.test(telefono);
 }
-
-
 btnEnviar.addEventListener('click', validate);
